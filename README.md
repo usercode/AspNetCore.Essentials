@@ -12,6 +12,8 @@ Adds extra http headers to response (COOP, COEP, CORP, X-Frame-Options, X-Conten
 
 ## Example ##
 
+### Use middleware ###
+
 ```csharp
 using AspNetCore.Essentials;
 
@@ -26,5 +28,20 @@ public void Configure(IApplicationBuilder app)
     app.AddCrossOriginOpenerPolicy(CrossOriginOpenerPolicy.SameOrigin);
     app.AddCrossOriginResourcePolicy(CrossOriginResourcePolicy.SameOrigin);
 }
+```
 
+### Use HttpResponse extensions ###
+
+```csharp
+public void Prepare(HttpResponse response)
+{
+    response.SetReferrerPolicy(ReferrerPolicy.StrictOriginWhenCrossOrigin);
+    
+    response.SetXContentTypeOptions(XContentOptions.NoSniff);
+    response.SetXFrameOptions(XFrameOptions.SameOrigin);
+    
+    response.SetCrossOriginEmbedderPolicy(CrossOriginEmbedderPolicy.RequireCorp);
+    response.SetCrossOriginOpenerPolicy(CrossOriginOpenerPolicy.SameOrigin);
+    response.SetCrossOriginResourcePolicy(CrossOriginResourcePolicy.SameOrigin);
+}
 ```
