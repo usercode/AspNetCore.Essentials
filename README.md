@@ -11,12 +11,14 @@ using AspNetCore.Essentials;
 
 public void Configure(IApplicationBuilder app)
 {
+    app.AddReferrerPolicy(ReferrerPolicy.StrictOriginWhenCrossOrigin);
+
     app.AddXContentTypeOptions(XContentOptions.NoSniff);
     app.AddXFrameOptions(XFrameOptions.SameOrigin);
     
     app.AddCrossOriginEmbedderPolicy(CrossOriginEmbedderPolicy.RequireCorp);
     app.AddCrossOriginOpenerPolicy(CrossOriginOpenerPolicy.SameOrigin);
-    app.AddCrossOriginResourcePolicy(CrossOriginResourcePolicy.SameOrigin)    
+    app.AddCrossOriginResourcePolicy(CrossOriginResourcePolicy.SameOrigin);
 }
 
 ```

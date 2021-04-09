@@ -1,5 +1,4 @@
-﻿using AspNetCore.Essentials.Types;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using System;
 
 namespace AspNetCore.Essentials
@@ -9,6 +8,34 @@ namespace AspNetCore.Essentials
     /// </summary>
     public static class CrossOriginExtensions
     {
+        /// <summary>
+        /// The Referrer-Policy HTTP header controls how much referrer information (sent via the Referer header) should be included with requests. Aside from the HTTP header, you can set this policy in HTML.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder AddReferrerPolicy(this IApplicationBuilder builder, ReferrerPolicy value)
+        {
+            builder.Use((context, next) =>
+            {
+                context.Response.Headers.Add("Referrer-Policy", value switch
+                {
+                    ReferrerPolicy.NoReferrer => "no-referrer",
+                    ReferrerPolicy.NoReferrerWhenDowngrade => "no-referrer-when-downgrade",
+                    ReferrerPolicy.Origin => "origin",
+                    ReferrerPolicy.OriginWhenCrossOrigin => "origin-when-cross-origin",
+                    ReferrerPolicy.SameOrigin => "same-origin",
+                    ReferrerPolicy.StrictOrigin => "strict-origin",
+                    ReferrerPolicy.StrictOriginWhenCrossOrigin => "strict-origin-when-cross-origin",
+                    _ => throw new Exception()
+                });
+
+                return next();
+            });
+
+            return builder;
+        }
+
         /// <summary>
         /// The X-Content-Type-Options response HTTP header is a marker used by the server to indicate that the MIME types advertised in the Content-Type headers should not be changed and be followed. This is a way to opt out of MIME type sniffing, or, in other words, to say that the MIME types are deliberately configured.
         /// </summary>

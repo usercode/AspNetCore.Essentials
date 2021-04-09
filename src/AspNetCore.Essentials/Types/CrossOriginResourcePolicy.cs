@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Essentials.Types
+namespace AspNetCore.Essentials
 {
     public enum CrossOriginResourcePolicy
     {
