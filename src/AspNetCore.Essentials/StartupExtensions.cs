@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace AspNetCore.Essentials
 {
     /// <summary>
-    /// CrossOriginExtensions
+    /// StartupExtensions
     /// </summary>
-    public static class CrossOriginExtensions
+    public static class StartupExtensions
     {
         /// <summary>
         /// The Referrer-Policy HTTP header controls how much referrer information (sent via the Referer header) should be included with requests. Aside from the HTTP header, you can set this policy in HTML.
@@ -18,17 +19,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) =>
             {
-                context.Response.Headers.Add("Referrer-Policy", value switch
-                {
-                    ReferrerPolicy.NoReferrer => "no-referrer",
-                    ReferrerPolicy.NoReferrerWhenDowngrade => "no-referrer-when-downgrade",
-                    ReferrerPolicy.Origin => "origin",
-                    ReferrerPolicy.OriginWhenCrossOrigin => "origin-when-cross-origin",
-                    ReferrerPolicy.SameOrigin => "same-origin",
-                    ReferrerPolicy.StrictOrigin => "strict-origin",
-                    ReferrerPolicy.StrictOriginWhenCrossOrigin => "strict-origin-when-cross-origin",
-                    _ => throw new Exception()
-                });
+                context.Response.SetReferrerPolicy(value);
 
                 return next();
             });
@@ -45,11 +36,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) => 
             {
-                context.Response.Headers.Add("X-Content-Type-Options", value switch
-                {
-                    XContentOptions.NoSniff => "nosniff",
-                    _ => throw new Exception()
-                });
+                context.Response.SetXContentTypeOptions(value);
 
                 return next();
             });
@@ -69,13 +56,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) =>
             {
-                context.Response.Headers.Add("X-Frame-Options", 
-                    value switch 
-                    { 
-                        XFrameOptions.Deny => "deny", 
-                        XFrameOptions.SameOrigin => "sameorigin",
-                        _ => throw new Exception() 
-                    });
+                context.Response.SetXFrameOptions(value);
 
                 return next();
             });
@@ -97,13 +78,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) =>
             {
-                context.Response.Headers.Add("Cross-Origin-Opener-Policy", value switch
-                {
-                    CrossOriginOpenerPolicy.UnsafeNone => "unsafe-none",
-                    CrossOriginOpenerPolicy.SameOrigin => "same-origin",
-                    CrossOriginOpenerPolicy.SameOriginAllowPopups => "same-origin-allow-popups",
-                    _ => throw new Exception()
-                });
+                context.Response.SetCrossOriginOpenerPolicy(value);
 
                 return next();
             });
@@ -121,13 +96,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) =>
             {
-                context.Response.Headers.Add("Cross-Origin-Embedder-Policy",
-                    value switch
-                    {
-                       CrossOriginEmbedderPolicy.UnsafeNone => "unsafe-none",
-                       CrossOriginEmbedderPolicy.RequireCorp => "require-corp",
-                        _ => throw new Exception()
-                    });
+                context.Response.SetCrossOriginEmbedderPolicy(value);
 
                 return next();
             });
@@ -136,7 +105,7 @@ namespace AspNetCore.Essentials
         }
 
         /// <summary>
-        /// The HTTP Cross-Origin-Resource-Policy response header conveys a desire that the browser blocks no-cors cross-origin/cross-site requests to the given resource.
+        /// The HTTP Cross-Origin-Resource-Policy (CORP) response header conveys a desire that the browser blocks no-cors cross-origin/cross-site requests to the given resource.
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="value"></param>
@@ -145,14 +114,7 @@ namespace AspNetCore.Essentials
         {
             builder.Use((context, next) =>
             {
-                context.Response.Headers.Add("Cross-Origin-Resource-Policy",
-                    value switch
-                    {
-                        CrossOriginResourcePolicy.SameSite => "same-site",
-                        CrossOriginResourcePolicy.SameOrigin => "same-origin",
-                        CrossOriginResourcePolicy.CrossOrigin => "cross-origin",
-                        _ => throw new Exception()
-                    });
+                context.Response.SetCrossOriginResourcePolicy(value);
 
                 return next();
             });
